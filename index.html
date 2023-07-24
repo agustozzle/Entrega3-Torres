@@ -2,13 +2,15 @@
 <html>
 <head>
   <title>Seguimiento de Gastos</title>
-  <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="stylesheet" type="text/css" href="./style.css">
 </head>
 <body>
   <div class="main-card swal2-borderless">
     <header>
       <h1>Seguimiento de Gastos</h1>
     </header>
+
+    <div id="requirements"></div>
 
     <div class="disponible-card">
       <label for="dineroInicial">Ingrese dinero disponible:</label>
@@ -18,23 +20,19 @@
     <br>
 
     <div class="dias-card">
-      <label for="dias">Ingrese la cantidad de días para calcular su gasto (ingrese '0' para seleccionar por mes):</label>
+      <label for="dias">Ingrese la cantidad de días para calcular su gasto:</label>
       <input type="text" id="dias">
     </div>
 
-    <div class="calcular-card"></div>
-    <button onclick="calcularGastos()">Calcular Gastos</button>
-    <br>
+    
 
     <div id="resultado"></div>
     <br>
-
-    <!-- Mostrar el botón de opciones siempre disponible aquí
-    <div id="menuOpciones">
-      <button onclick="mostrarOpciones()">Mostrar Menú con Opciones</button>
-      <div id="opciones"></div>
-    </div>
-  </div> -->
+    <div class="calcular-card">
+    <button id="calcularGastosButton">Calcular Gastos</button>
+      </div>
+      
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.5/dist/sweetalert2.all.min.js"></script>
   <script src="main.js"></script>
