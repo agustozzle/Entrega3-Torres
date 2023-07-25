@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const dineroInicialInput = document.getElementById("dineroInicial");
   const diasInput = document.getElementById("dias");
   const dividirGastosButton = document.getElementById("dividirGastosButton");
-  const calcularGastosButton = document.getElementById("calcularGastosButton");
   const nuevoPresupuestoButton = document.getElementById("nuevoPresupuestoButton");
   const resultadoDiv = document.getElementById("resultado");
   const gastosContainer = document.getElementById("gastosContainer");
@@ -38,17 +37,22 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function crearInputsGastos(dias) {
-    gastosContainer.innerHTML = ""; 
+    gastosContainer.innerHTML = "";
 
     for (let i = 1; i <= dias; i++) {
       const inputDia = document.createElement("input");
       inputDia.type = "text";
       inputDia.placeholder = `Ingrese el gasto del día ${i}`;
 
-   
       if (gastosDiarios.length >= i) {
         inputDia.value = gastosDiarios[i - 1].toString();
       }
+
+
+      inputDia.addEventListener("input", function () {
+        gastosDiarios[i - 1] = parseFloat(inputDia.value) || 0; // Guardar el valor ingresado en el arreglo
+        guardarDatosEnStorage(parseFloat(dineroInicialInput.value), gastosDiarios, dias);
+      });
 
       gastosContainer.appendChild(inputDia);
     }
@@ -80,12 +84,12 @@ document.addEventListener("DOMContentLoaded", function () {
           gastosDiarios.push(gastoDia);
         }
       });
+
+      // Guardar los datos en localStorage al hacer clic en "Calcular Gastos"
       guardarDatosEnStorage(dineroInicial, gastosDiarios, dias);
 
-      
       nuevoPresupuestoButton.style.display = "block";
 
-     
       dividirGastosRealizado = true;
     });
   }
@@ -99,42 +103,35 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    crearInputsGastos(dias); 
+    crearInputsGastos(dias);
   }
 
   function nuevoPresupuesto() {
-    gastosContainer.innerHTML = ""; 
-    resultadoDiv.innerHTML = ""; 
-    dineroInicialInput.value = ""; 
-    diasInput.value = ""; 
-    gastosDiarios = []; 
-
-  
+    gastosContainer.innerHTML = "";
+    resultadoDiv.innerHTML = "";
+    dineroInicialInput.value = "";
+    diasInput.value = "";
+    gastosDiarios = [];
     nuevoPresupuestoButton.style.display = "none";
-
-   
     localStorage.removeItem("datosGastos");
   }
 
-  calcularGastosButton.addEventListener("click", calcularGastos);
   dividirGastosButton.addEventListener("click", calcularGastos);
   nuevoPresupuestoButton.addEventListener("click", nuevoPresupuesto);
 
-
+  // Traer la información del storage al inicio de la ejecución
   const datosGuardados = obtenerDatosDeStorage();
   if (datosGuardados && datosGuardados.dividirGastosRealizado) {
     dineroInicialInput.value = datosGuardados.dineroInicial;
     diasInput.value = datosGuardados.dias;
     gastosDiarios = datosGuardados.gastosDiarios;
-    crearInputsGastos(datosGuardados.dias); // Recrear los inputs de gastos
-    mostrarResultado(datosGuardados.dineroInicial, datosGuardados.gastosDiarios); // Mostrar el resultado
-
- 
+    crearInputsGastos(datosGuardados.dias);
+    mostrarResultado(datosGuardados.dineroInicial, datosGuardados.gastosDiarios);
     nuevoPresupuestoButton.style.display = "block";
-
     dividirGastosRealizado = true;
   }
 });
+
 
  
 
