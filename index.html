@@ -10,8 +10,6 @@
       <h1>Seguimiento de Gastos</h1>
     </header>
 
-    <div id="requirements"></div>
-
     <div class="disponible-card">
       <label for="dineroInicial">Ingrese dinero disponible:</label>
       <input type="text" id="dineroInicial">
@@ -22,19 +20,21 @@
     <div class="dias-card">
       <label for="dias">Ingrese la cantidad de días para calcular su gasto:</label>
       <input type="text" id="dias">
+      <button id="dividirGastosButton">Dividir Gastos</button>
     </div>
 
-    
+    <div id="gastosContainer"></div>
 
     <div id="resultado"></div>
     <br>
     <div class="calcular-card">
-    <button id="calcularGastosButton">Calcular Gastos</button>
-      </div>
-      
+      <button id="calcularGastosButton">Calcular</button>
+      <button id="nuevoPresupuestoButton" style="display: none;">Hacer Otro Presupuesto</button>
+    </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.5/dist/sweetalert2.all.min.js"></script>
   <script src="main.js"></script>
 </body>
 </html>
+
