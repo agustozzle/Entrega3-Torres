@@ -1,80 +1,140 @@
-const dineroInicialInput = document.getElementById("dineroInicial");
-const calcularGastosButton = document.getElementById("calcularGastosButton");
-const resultadoDiv = document.getElementById("resultado");
+document.addEventListener("DOMContentLoaded", function () {
+  const dineroInicialInput = document.getElementById("dineroInicial");
+  const diasInput = document.getElementById("dias");
+  const dividirGastosButton = document.getElementById("dividirGastosButton");
+  const calcularGastosButton = document.getElementById("calcularGastosButton");
+  const nuevoPresupuestoButton = document.getElementById("nuevoPresupuestoButton");
+  const resultadoDiv = document.getElementById("resultado");
+  const gastosContainer = document.getElementById("gastosContainer");
 
-let gastosDiarios = [];
+  let gastosDiarios = [];
+  let dias = 0;
+  let dividirGastosRealizado = false;
 
-function restar(a, b) {
-  return a - b;
-}
-
-function mostrarResultado(dineroInicial, gastosDiarios) {
-  const totalGastado = gastosDiarios.reduce((a, b) => a + b, 0);
-  const ahorro = restar(dineroInicial, totalGastado);
-  const dias = gastosDiarios.length;
-  resultadoDiv.textContent = `Su capital final en el día ${dias} es de $${dineroInicial - totalGastado}. Usted pudo ahorrar este mes: $${ahorro}`;
-
-  // Guardar los gastos en localStorage
-  localStorage.setItem("informeMes", JSON.stringify({ gastosDiarios }));
-}
-
-function calcularGastos() {
-  let dineroInicial = parseFloat(dineroInicialInput.value);
-  let dias = parseInt(document.getElementById("dias").value);
-
-  if (isNaN(dineroInicial) || isNaN(dias)) {
-    alert('Por favor, ingrese valores numéricos válidos.');
-    return;
+  function restar(a, b) {
+    return a - b;
   }
 
-  let saldoFinalDia = dineroInicial;
-  gastosDiarios = []; // Limpiar gastosDiarios
+  function mostrarResultado(dineroInicial, gastosDiarios) {
+    const totalGastado = gastosDiarios.reduce((a, b) => a + b, 0);
+    const ahorro = restar(dineroInicial, totalGastado);
+    const dias = gastosDiarios.length;
+    resultadoDiv.innerHTML = `Su capital final en el día ${dias} es de $${dineroInicial - totalGastado}. Usted pudo ahorrar este mes: $${ahorro}`;
+  }
 
-  function ingresarGastoDia(i) {
-    if (i > dias) {
-      let totalGastado = gastosDiarios.reduce((a, b) => a + b, 0);
-      let ahorro = restar(dineroInicial, totalGastado);
+  function guardarDatosEnStorage(dineroInicial, gastosDiarios, dias) {
+    const datos = {
+      dineroInicial: dineroInicial,
+      gastosDiarios: gastosDiarios,
+      dias: dias,
+      dividirGastosRealizado: dividirGastosRealizado,
+    };
+    localStorage.setItem("datosGastos", JSON.stringify(datos));
+  }
 
-      if (saldoFinalDia < 0) {
-        alert(`Su capital es insuficiente, por favor recargue. Tiene que abonar: $${saldoFinalDia}`);
-      } else {
-        mostrarResultado(dineroInicial, gastosDiarios);
+  function obtenerDatosDeStorage() {
+    const datosGuardados = localStorage.getItem("datosGastos");
+    return datosGuardados ? JSON.parse(datosGuardados) : null;
+  }
+
+  function crearInputsGastos(dias) {
+    gastosContainer.innerHTML = ""; 
+
+    for (let i = 1; i <= dias; i++) {
+      const inputDia = document.createElement("input");
+      inputDia.type = "text";
+      inputDia.placeholder = `Ingrese el gasto del día ${i}`;
+
+   
+      if (gastosDiarios.length >= i) {
+        inputDia.value = gastosDiarios[i - 1].toString();
       }
-      return;
+
+      gastosContainer.appendChild(inputDia);
     }
 
-    const dineroGastado = parseFloat(prompt(`Día ${i}: Ingrese cuánto gastó:`));
-    if (isNaN(dineroGastado)) {
-      alert('Por favor, ingrese un número válido.');
-      return;
-    }
+    const calcularGastosButton = document.createElement("button");
+    calcularGastosButton.innerText = "Calcular Gastos";
+    gastosContainer.appendChild(calcularGastosButton);
 
-    gastosDiarios.push(dineroGastado);
-    saldoFinalDia = restar(saldoFinalDia, dineroGastado);
+    calcularGastosButton.addEventListener("click", function () {
+      const inputsGastos = gastosContainer.querySelectorAll("input");
+      let totalGastos = 0;
 
-    if (saldoFinalDia < 0) {
-      alert(`Su capital es insuficiente, por favor recargue. Tiene que abonar: $${saldoFinalDia}`);
-      return;
-    }
+      inputsGastos.forEach((input) => {
+        const gastoDia = parseFloat(input.value);
+        if (!isNaN(gastoDia) && gastoDia >= 0) {
+          totalGastos += gastoDia;
+        }
+      });
 
-    ingresarGastoDia(i + 1);
+      const dineroInicial = parseFloat(dineroInicialInput.value);
+      const ahorro = dineroInicial - totalGastos;
+
+      resultadoDiv.innerHTML = `Gastos totales: $${totalGastos.toFixed(2)}<br>Ahorro: $${ahorro.toFixed(2)}`;
+
+      gastosDiarios = [];
+      inputsGastos.forEach((input) => {
+        const gastoDia = parseFloat(input.value);
+        if (!isNaN(gastoDia) && gastoDia >= 0) {
+          gastosDiarios.push(gastoDia);
+        }
+      });
+      guardarDatosEnStorage(dineroInicial, gastosDiarios, dias);
+
+      
+      nuevoPresupuestoButton.style.display = "block";
+
+     
+      dividirGastosRealizado = true;
+    });
   }
 
-  ingresarGastoDia(1);
-}
+  function calcularGastos() {
+    const dineroInicial = parseFloat(dineroInicialInput.value);
+    dias = parseInt(diasInput.value);
 
-calcularGastosButton.addEventListener("click", calcularGastos);
-
-dineroInicialInput.addEventListener("change", function () {
-  const savedData = localStorage.getItem("informeMes");
-  if (savedData) {
-    const parsedData = JSON.parse(savedData);
-    if (parsedData.gastosDiarios) {
-      gastosDiarios = parsedData.gastosDiarios;
+    if (isNaN(dineroInicial) || isNaN(dias) || dias <= 0) {
+      alert("Por favor, ingrese valores numéricos válidos para dinero disponible y días.");
+      return;
     }
+
+    crearInputsGastos(dias); 
   }
 
-  mostrarResultado(parseFloat(dineroInicialInput.value), gastosDiarios);
+  function nuevoPresupuesto() {
+    gastosContainer.innerHTML = ""; 
+    resultadoDiv.innerHTML = ""; 
+    dineroInicialInput.value = ""; 
+    diasInput.value = ""; 
+    gastosDiarios = []; 
+
+  
+    nuevoPresupuestoButton.style.display = "none";
+
+   
+    localStorage.removeItem("datosGastos");
+  }
+
+  calcularGastosButton.addEventListener("click", calcularGastos);
+  dividirGastosButton.addEventListener("click", calcularGastos);
+  nuevoPresupuestoButton.addEventListener("click", nuevoPresupuesto);
+
+
+  const datosGuardados = obtenerDatosDeStorage();
+  if (datosGuardados && datosGuardados.dividirGastosRealizado) {
+    dineroInicialInput.value = datosGuardados.dineroInicial;
+    diasInput.value = datosGuardados.dias;
+    gastosDiarios = datosGuardados.gastosDiarios;
+    crearInputsGastos(datosGuardados.dias); // Recrear los inputs de gastos
+    mostrarResultado(datosGuardados.dineroInicial, datosGuardados.gastosDiarios); // Mostrar el resultado
+
+ 
+    nuevoPresupuestoButton.style.display = "block";
+
+    dividirGastosRealizado = true;
+  }
 });
 
+ 
 
