@@ -1,76 +1,64 @@
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #d4faff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
-  
-  .main-card {
-    background-color: #e1f9ff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    max-width: 400px;
-    margin: 20px;
-  }
-  
-  header {
-    text-align: center;
-  }
-  
-  h1 {
-    margin: 0;
-    padding: 0;
-    color: #555;
-  }
-  
-  .disponible-card, .dias-card, .calcular-card {
-    margin-bottom: 10px;
-  }
-  
-  label {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 5px;
-  }
-  
-  input[type="text"] {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  button {
-    background-color: #007bff;
-    color: #fff;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
-  #resultado {
-    font-size: 18px;
-    color: #333;
-  }
-  
-  #menuOpciones {
-    margin-top: 20px;
-  }
-  
-  #opciones {
-    margin-top: 10px;
-  }
-  
-  
-  
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+#nuevoPresupuestoButton {
+  display: none;
+}
+
+#calcularGastosButton {
+background-color: red;
+}
+
+.main-card {
+  background-color: #f2f2f2;
+  padding: 20px;
+  max-width: 400px;
+  margin: 20px auto;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+h1 {
+  margin: 0;
+  text-align: center;
+}
+
+.input-card {
+  margin-bottom: 10px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+#resultado {
+  margin-top: 20px;
+  text-align: center;
+}
+
